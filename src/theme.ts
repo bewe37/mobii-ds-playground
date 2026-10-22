@@ -75,6 +75,10 @@ export const themes: Record<Mode, ThemeConfig> = {
   dark: buildTheme(darkTokens, antdTheme.darkAlgorithm),
 };
 
+// Styles antd has no token for, passed to ConfigProvider's typography prop.
+// Figma's -2% letter spacing is -0.02em, so it scales with each text size.
+export const typography = { style: { letterSpacing: '-0.02em' } };
+
 export const antdDefaultThemes: Record<Mode, ThemeConfig> = {
   light: { algorithm: antdTheme.defaultAlgorithm },
   dark: { algorithm: antdTheme.darkAlgorithm },

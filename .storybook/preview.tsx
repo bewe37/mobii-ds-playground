@@ -1,7 +1,7 @@
 import type { Preview } from '@storybook/react-vite';
 import { useLayoutEffect, type ReactNode } from 'react';
 import { ConfigProvider, theme as antdTheme } from 'antd';
-import { antdDefaultThemes, themes, type Mode } from '../src/theme';
+import { antdDefaultThemes, themes, typography, type Mode } from '../src/theme';
 
 // Paints the canvas with the active theme's background so dark mode isn't drawn on white.
 function Canvas({ mode, children }: { mode: Mode; children: ReactNode }) {
@@ -58,9 +58,12 @@ const preview: Preview = {
   decorators: [
     (Story, context) => {
       const mode: Mode = context.globals.mode === 'dark' ? 'dark' : 'light';
-      const config = context.globals.dsTheme === 'ours' ? themes[mode] : antdDefaultThemes[mode];
+      const ours = context.globals.dsTheme === 'ours';
       return (
-        <ConfigProvider theme={config}>
+        <ConfigProvider
+          theme={ours ? themes[mode] : antdDefaultThemes[mode]}
+          typography={ours ? typography : undefined}
+        >
           <Canvas mode={mode}>
             <Story />
           </Canvas>

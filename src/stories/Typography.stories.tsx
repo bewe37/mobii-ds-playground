@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Flex, Typography } from 'antd';
+import { expect } from 'storybook/test';
 
 const { Title, Text, Paragraph, Link } = Typography;
 
@@ -51,4 +52,12 @@ export const AllVariants: Story = {
       </Paragraph>
     </Flex>
   ),
+  // Our theme sets letter spacing to -2% of the font size on every Typography component.
+  play: async ({ canvas, globals }) => {
+    if (globals.dsTheme !== 'ours') return;
+    for (const el of [canvas.getByRole('heading', { name: 'Heading 1' }), canvas.getByText('Default')]) {
+      const { letterSpacing, fontSize } = getComputedStyle(el);
+      await expect(parseFloat(letterSpacing) / parseFloat(fontSize)).toBeCloseTo(-0.02, 3);
+    }
+  },
 };
