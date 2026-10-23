@@ -1,0 +1,106 @@
+/* antd indents nested items by level × inlineIndent; the design aligns them with the parent label instead. */
+.sidebar .ant-menu-inline .ant-menu-sub .ant-menu-item {
+  padding-inline-start: var(--sidebar-sub-indent) !important;
+}
+
+/* antd's dark theme has no subMenuItemSelectedColor of its own; the design keeps open titles at the item colour. */
+.sidebar .ant-menu-dark.ant-menu-inline .ant-menu-submenu-selected > .ant-menu-submenu-title {
+  color: var(--sidebar-dark-submenu-selected);
+}
+
+.sidebar .ant-menu {
+  border-inline-end: none !important;
+}
+
+/* antd reserves room for its own absolutely placed arrow; ours sits inline, so end it on the item padding. */
+.sidebar .ant-menu-inline .ant-menu-submenu-title {
+  padding-inline-end: var(--sidebar-item-padding);
+}
+
+/* Collapse: the edge moves, everything past it is clipped, so content hides right to left. */
+.sidebar {
+  overflow: hidden;
+  transition: width var(--sidebar-duration) var(--sidebar-ease);
+}
+
+.sidebar-header {
+  transition: padding var(--sidebar-duration) var(--sidebar-ease);
+}
+
+/* Footer row: reset the native button, then behave like a menu item (same hover fill and timing). */
+.sidebar-account {
+  display: flex;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  cursor: pointer;
+  transition:
+    padding var(--sidebar-duration) var(--sidebar-ease),
+    background-color var(--sidebar-hover-duration);
+}
+
+/* Collapsed, the row is just the avatar: no fill around it. */
+@media (hover: hover) and (pointer: fine) {
+  .sidebar:not([data-collapsed]) .sidebar-account:hover {
+    background-color: var(--sidebar-account-hover-bg);
+  }
+}
+
+.sidebar-account:focus-visible {
+  outline: var(--sidebar-focus-ring);
+  outline-offset: 1px;
+}
+
+/* Labels fade with antd's own label timing while the edge passes over them. */
+.sidebar-fade {
+  transition: opacity var(--sidebar-duration) var(--sidebar-fade-ease);
+}
+
+/* Top-level labels only: nested items close with the submenu's own height motion. */
+.sidebar[data-collapsed] .sidebar-fade,
+.sidebar[data-collapsed] .ant-menu-root > .ant-menu-item > .ant-menu-title-content,
+.sidebar[data-collapsed] .ant-menu-root > .ant-menu-submenu > .ant-menu-submenu-title > .ant-menu-title-content,
+.sidebar[data-collapsed] .sidebar-chevron {
+  opacity: 0;
+}
+
+/* While the edge moves, clip instead of re-truncating, so labels are cut rather than rewritten to "N…". */
+.sidebar[data-animating] .ant-menu .ant-menu-title-content {
+  text-overflow: clip;
+}
+
+/* The chevron rides the item's closing edge, so it leaves faster than the labels. */
+.sidebar .ant-menu .ant-menu-submenu-title .sidebar-chevron {
+  /* antd gives menu icons iconSize min-width, which would centre the 12px glyph short of the edge. */
+  min-width: 0;
+  transition: opacity var(--sidebar-duration) var(--sidebar-fade-ease);
+}
+
+.sidebar[data-collapsed] .ant-menu .ant-menu-submenu-title .sidebar-chevron {
+  transition-duration: var(--sidebar-duration-fast);
+}
+
+/* The logo mark only acts as the expand button once the rail is collapsed. */
+.sidebar:not([data-collapsed]) .sidebar-logo {
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar,
+  .sidebar-header {
+    transition: none;
+  }
+
+  .sidebar-account {
+    transition: background-color var(--sidebar-hover-duration);
+  }
+}
+
+.sidebar-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
